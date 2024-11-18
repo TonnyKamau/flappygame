@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappygame/constants.dart';
@@ -15,7 +14,7 @@ class Bird extends SpriteComponent with CollisionCallbacks {
           size: Vector2(birdWidth, birdHeight),
         );
   double velocity = 0;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+
   @override
   FutureOr<void> onLoad() async {
     sprite = await Sprite.load('bird.png');
@@ -25,6 +24,7 @@ class Bird extends SpriteComponent with CollisionCallbacks {
 
   void flap() {
     velocity = jumpHeight;
+    SoundManager.playWingSound();
   }
 
   @override
@@ -38,11 +38,11 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is Ground) {
-      _audioPlayer.play(AssetSource('audio/die.wav'));
+      SoundManager.playDieSound();
       (parent as FlappyGame).gameOver();
     }
     if (other is Pipe) {
-      _audioPlayer.play(AssetSource('audio/hit.wav'));
+      SoundManager.playHitSound();
       (parent as FlappyGame).gameOver();
     }
   }

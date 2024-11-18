@@ -5,3 +5,4 @@ export 'pipe.dart';
 export 'pipe_manager.dart';
 export 'score.dart';
 export 'pause.dart';
+export 'soundmanager.dart';
