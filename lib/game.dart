@@ -1,6 +1,8 @@
 import 'package:flame/events.dart'; // Importing event handling
 import 'package:flame/flame.dart'; // Importing Flame engine functionalities
 import 'package:flame/game.dart'; // Importing game functionalities
+import 'package:flappygame/database/database.dart';
+import 'package:flappygame/models/score.dart';
 import 'package:flutter/material.dart'; // Importing Flutter material design
 import 'package:flappygame/constants.dart'; // Importing constants for the game
 import 'components/components.dart'; // Importing game components
@@ -12,7 +14,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   late PipeManager pipeManager; // Manages the pipes
   late ScoreText scoreText; // Displays the score
   late PauseButton pauseButton; // Button to pause the game
-
+  late HighestScore highestScore; // Displays the highest score
   bool isPaused = false; // Indicates if the game is paused
   bool isGameOver = false; // Indicates if the game is over
   bool isReady = true; // For "Get Ready" screen
@@ -28,6 +30,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
     pipeManager = PipeManager(); // Initialize the pipe manager
     scoreText = ScoreText(); // Initialize the score text
     pauseButton = PauseButton(this); // Initialize the pause button
+    highestScore = HighestScore(); // Initialize the highest score
 
     // Add all components to the game
     add(background);
@@ -36,6 +39,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
     add(pipeManager);
     add(scoreText);
     add(pauseButton);
+    add(highestScore);
   }
 
   @override
@@ -154,9 +158,14 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   /// Handle game over logic
-  void gameOver() {
+  void gameOver() async {
     isGameOver = true; // Set the game to over
     pauseEngine(); // Pause the game engine
+
+    // Insert the score only if it's higher than the current highest
+    await AppDatabase.instance.insertScoreAndUpdateRanks(
+      Score(score: score, date: DateTime.now()),
+    );
 
     // Show a dialog to inform the player that the game is over
     showDialog(
