@@ -43,11 +43,11 @@ class PauseButton extends PositionComponent with TapCallbacks {
 
   // Method called when the game is resized
   @override
-  void onGameResize(Vector2 gameSize) {
-    super.onGameResize(gameSize); // Call the superclass method
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size); // Call the superclass method
     // Update position when game size changes
     position = Vector2(
-      gameSize.x - size.x - 40, // Recalculate position based on new game size
+      size.x - size.x - 40, // Recalculate position based on new game size
       40,
     );
   }

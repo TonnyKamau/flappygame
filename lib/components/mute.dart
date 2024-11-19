@@ -45,11 +45,11 @@ class MuteButton extends PositionComponent with TapCallbacks {
 
   // Method called when the game is resized
   @override
-  void onGameResize(Vector2 gameSize) {
-    super.onGameResize(gameSize); // Call the superclass method
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size); // Call the superclass method
     // Update position when game size changes
     position = Vector2(
-      gameSize.x - size.x - 40, // Recalculate X position
+      size.x - size.x - 40, // Recalculate X position
       90, // 50 pixels below the PauseButton
     );
   }

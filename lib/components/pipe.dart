@@ -44,6 +44,7 @@ class Pipe extends SpriteComponent
   void _playPointSound() async {
     try {
       SoundManager.playPointSound();
+      // ignore: empty_catches
     } catch (e) {}
   }
 }
