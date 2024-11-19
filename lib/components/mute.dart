@@ -14,6 +14,11 @@ class MuteButton extends PositionComponent with TapCallbacks {
       : _bgPaint = Paint()..color = Colors.white.withOpacity(0.7) {
     size = Vector2(40, 40);
     position = Vector2(game.size.x - size.x - 40, 90);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
 
     muteText = TextComponent(
       text: '🔇',
@@ -37,17 +42,16 @@ class MuteButton extends PositionComponent with TapCallbacks {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     position = Vector2(
-      size.x - size.x - 40,
+      size.x - this.size.x - 40,
       90,
     );
   }
 
   @override
-  bool onTapDown(TapDownEvent event) {
+  void onTapDown(TapDownEvent event) {
     SoundManager.toggleMute();
     isMuted = !isMuted;
     muteText.text = isMuted ? '🔊' : '🔇';
-    return true;
   }
 
   @override

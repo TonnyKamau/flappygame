@@ -12,12 +12,17 @@ class PauseButton extends PositionComponent with TapCallbacks {
       : _bgPaint = Paint()..color = Colors.white.withOpacity(0.7) {
     size = Vector2(40, 40);
     position = Vector2(game.size.x - size.x - 40, 40);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
 
     pauseText = TextComponent(
       text: '⏸️',
       textRenderer: TextPaint(
         style: const TextStyle(
-          fontSize: 40,
+          fontSize: 30,
           color: Colors.black,
         ),
       ),
@@ -35,17 +40,16 @@ class PauseButton extends PositionComponent with TapCallbacks {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     position = Vector2(
-      size.x - size.x - 40,
+      size.x - this.size.x - 40,
       40,
     );
   }
 
   @override
-  bool onTapDown(TapDownEvent event) {
+  void onTapDown(TapDownEvent event) {
     if (!game.isGameOver && !game.isReady) {
       game.pauseGame();
     }
-    return true;
   }
 
   @override
