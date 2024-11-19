@@ -161,12 +161,14 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   void gameOver() async {
     isGameOver = true; // Set the game to over
     pauseEngine(); // Pause the game engine
-
+    // Fetch the highest score from the database
+    final highestScore = await AppDatabase.instance.getHighestScore();
     // Insert the score only if it's higher than the current highest
-    await AppDatabase.instance.insertScoreAndUpdateRanks(
-      Score(score: score, date: DateTime.now()),
-    );
-
+    if (score > highestScore) {
+      await AppDatabase.instance.insertScoreAndUpdateRanks(
+        Score(score: score, date: DateTime.now()),
+      );
+    }
     // Show a dialog to inform the player that the game is over
     showDialog(
       context: buildContext!,
