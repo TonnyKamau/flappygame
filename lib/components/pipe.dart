@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flappygame/constants.dart';
 import 'package:flappygame/game.dart';
+
+import 'components.dart';
 
 class Pipe extends SpriteComponent
     with HasGameRef<FlappyGame>, CollisionCallbacks {
   final bool isTop; // Indicates if the pipe is the top pipe
   bool scored = false; // Tracks if the pipe has been scored
-  final AudioPlayer _audioPlayer = AudioPlayer(); // Audio player instance
 
   Pipe(Vector2 size, Vector2 position, {required this.isTop})
       : super(size: size, position: position);
@@ -43,9 +43,7 @@ class Pipe extends SpriteComponent
   // Play the point sound
   void _playPointSound() async {
     try {
-      await _audioPlayer.play(AssetSource('audio/point.wav'));
-    } catch (e) {
-      print('Error playing sound: $e');
-    }
+      SoundManager.playPointSound();
+    } catch (e) {}
   }
 }

@@ -14,6 +14,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   late PipeManager pipeManager; // Manages the pipes
   late ScoreText scoreText; // Displays the score
   late PauseButton pauseButton; // Button to pause the game
+  late MuteButton muteButton; // Button to mute the game
   late HighestScore highestScore; // Displays the highest score
   bool isPaused = false; // Indicates if the game is paused
   bool isGameOver = false; // Indicates if the game is over
@@ -31,6 +32,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
     scoreText = ScoreText(); // Initialize the score text
     pauseButton = PauseButton(this); // Initialize the pause button
     highestScore = HighestScore(); // Initialize the highest score
+    muteButton = MuteButton(this); // Initialize the mute button
 
     // Add all components to the game
     add(background);
@@ -39,6 +41,8 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
     add(pipeManager);
     add(scoreText);
     add(pauseButton);
+    add(muteButton);
+
     add(highestScore);
   }
 
