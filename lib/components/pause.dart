@@ -1,79 +1,62 @@
-import 'package:flame/components.dart'; // Import Flame components for game development
-import 'package:flame/events.dart'; // Import Flame event handling
-import 'package:flutter/material.dart'; // Import Flutter material design
-import '../game.dart'; // Import the game logic
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flutter/material.dart';
+import '../game.dart';
 
-// Class representing a pause button in the game
 class PauseButton extends PositionComponent with TapCallbacks {
-  final FlappyGame game; // Reference to the game instance
-  late final TextComponent pauseText; // Text component for the pause icon
-  final Paint _bgPaint; // Paint object for the button background
+  final FlappyGame game;
+  late final TextComponent pauseText;
+  final Paint _bgPaint;
 
-  // Constructor for PauseButton
   PauseButton(this.game)
       : _bgPaint = Paint()..color = Colors.white.withOpacity(0.7) {
-    // Initialize background paint
-    size = Vector2(40, 40); // Button size
+    size = Vector2(40, 40);
+    position = Vector2(game.size.x - size.x - 40, 40);
 
-    // Position will be set in onGameResize
-    position = Vector2(
-        game.size.x - size.x - 40, // 20 pixels from right edge
-        40 // 20 pixels from top
-        );
-
-    // Initialize the pause text component
     pauseText = TextComponent(
-      text: '⏸️', // Pause icon
+      text: '⏸️',
       textRenderer: TextPaint(
         style: const TextStyle(
-          fontSize: 40, // Font size for the pause icon
-          color: Colors.black, // Color of the pause icon
+          fontSize: 40,
+          color: Colors.black,
         ),
       ),
     );
 
-    // Center the pause icon in the button
     pauseText.position = Vector2(
-      (size.x - pauseText.size.x) / 2, // Center horizontally
-      (size.y - pauseText.size.y) / 2, // Center vertically
+      (size.x - pauseText.size.x) / 2,
+      (size.y - pauseText.size.y) / 2,
     );
 
-    add(pauseText); // Add the pause text to the button
+    add(pauseText);
   }
 
-  // Method called when the game is resized
   @override
   void onGameResize(Vector2 size) {
-    super.onGameResize(size); // Call the superclass method
-    // Update position when game size changes
+    super.onGameResize(size);
     position = Vector2(
-      size.x - size.x - 40, // Recalculate position based on new game size
+      size.x - size.x - 40,
       40,
     );
   }
 
-  // Method called when the button is tapped
   @override
   bool onTapDown(TapDownEvent event) {
     if (!game.isGameOver && !game.isReady) {
-      // Check if the game is not over and ready
-      game.pauseGame(); // Pause the game
+      game.pauseGame();
     }
-    return true; // Indicate that the tap was handled
+    return true;
   }
 
-  // Method to render the button on the canvas
   @override
   void render(Canvas canvas) {
-    // Draw rounded rectangle background
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-            0, 0, size.x, size.y), // Define the rectangle for the button
-        const Radius.circular(8), // Set the corner radius
+        Rect.fromLTWH(0, 0, size.x, size.y),
+        const Radius.circular(8),
       ),
-      _bgPaint, // Use the background paint
+      _bgPaint,
     );
-    super.render(canvas); // Call the superclass render method
+    super.render(canvas);
   }
 }

@@ -42,7 +42,6 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
     add(scoreText);
     add(pauseButton);
     add(muteButton);
-
     add(highestScore);
   }
 
