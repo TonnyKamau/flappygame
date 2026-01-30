@@ -12,16 +12,25 @@ class ScoreText extends TextComponent with HasGameReference<FlappyGame> {
           textRenderer: TextPaint(
             style: TextStyle(
               fontSize: GameConfig.scoreFontSize,
-              color: Colors.grey.shade800,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 10,
+                  color: Colors.black.withValues(alpha: 0.5),
+                  offset: const Offset(2, 4),
+                ),
+              ],
             ),
           ),
         );
 
   @override
   FutureOr<void> onLoad() async {
+    priority = 100;
     position = Vector2(
       (game.size.x - size.x) / 2,
-      game.size.y - size.y - GameConfig.groundHeight - GameConfig.buttonMargin,
+      game.size.y * 0.15, // Move to top center
     );
   }
 
@@ -30,7 +39,7 @@ class ScoreText extends TextComponent with HasGameReference<FlappyGame> {
     super.onGameResize(size);
     position = Vector2(
       (size.x - this.size.x) / 2,
-      size.y - this.size.y - GameConfig.groundHeight - GameConfig.buttonMargin,
+      size.y * 0.15,
     );
   }
 
@@ -39,6 +48,8 @@ class ScoreText extends TextComponent with HasGameReference<FlappyGame> {
     final newScore = game.score.toString();
     if (newScore != text) {
       text = newScore;
+      // Re-center if text length changes
+      position.x = (game.size.x - size.x) / 2;
     }
     super.update(dt);
   }

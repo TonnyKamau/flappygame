@@ -7,27 +7,29 @@ class SoundManager {
   static final AudioPlayer _pointPlayer = AudioPlayer();
   static bool isMuted = false; // Global mute flag
 
-  static Future<void> playWingSound() async {
+  static void playWingSound() {
     if (!isMuted) {
-      await _wingPlayer.play(AssetSource('audio/wing.wav'));
+      _wingPlayer
+          .stop()
+          .then((_) => _wingPlayer.play(AssetSource('audio/wing.wav')));
     }
   }
 
-  static Future<void> playDieSound() async {
+  static void playDieSound() {
     if (!isMuted) {
-      await _diePlayer.play(AssetSource('audio/die.wav'));
+      _diePlayer.play(AssetSource('audio/die.wav'));
     }
   }
 
-  static Future<void> playHitSound() async {
+  static void playHitSound() {
     if (!isMuted) {
-      await _hitPlayer.play(AssetSource('audio/hit.wav'));
+      _hitPlayer.play(AssetSource('audio/hit.wav'));
     }
   }
 
-  static void playPointSound() async {
+  static void playPointSound() {
     if (!isMuted) {
-      await _pointPlayer.play(AssetSource('audio/point.wav'));
+      _pointPlayer.play(AssetSource('audio/point.wav'));
     }
   }
 

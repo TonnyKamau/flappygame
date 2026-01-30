@@ -11,31 +11,28 @@ class HighestScore extends PositionComponent {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    priority = 100;
 
     final highestScore = await AppDatabase.instance.getHighestScore();
 
     backgroundBox = RectangleComponent(
-      size: Vector2(GameConfig.highScoreBoxWidth, GameConfig.highScoreBoxHeight),
+      size:
+          Vector2(GameConfig.highScoreBoxWidth, GameConfig.highScoreBoxHeight),
       position: Vector2(GameConfig.buttonMargin, GameConfig.buttonMargin),
-      paint: Paint()..color = const Color(0xAA000000),
+      paint: Paint()..color = GameConfig.glassColor,
     );
+    // Add rounded corners style via decoration or manual drawing
     add(backgroundBox);
 
     textComponent = TextComponent(
-      text: 'High Score: $highestScore',
+      text: 'HIGH SCORE: $highestScore',
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
           fontSize: GameConfig.highScoreFontSize,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          shadows: const [
-            Shadow(
-              offset: Offset(2, 2),
-              blurRadius: 4,
-              color: Color(0xFF000000),
-            ),
-          ],
+          fontWeight: FontWeight.w900,
+          color: Colors.black87,
+          letterSpacing: 1.2,
         ),
       ),
     );
@@ -44,11 +41,32 @@ class HighestScore extends PositionComponent {
     backgroundBox.add(textComponent);
   }
 
-  /// Called from game.dart after game over to refresh the displayed score.
-  /// This replaces the old approach of querying the database every frame.
+  @override
+  void render(Canvas canvas) {
+    // Draw rounded background
+    final rect = Rect.fromLTWH(
+      GameConfig.buttonMargin,
+      GameConfig.buttonMargin,
+      GameConfig.highScoreBoxWidth,
+      GameConfig.highScoreBoxHeight,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()..color = GameConfig.glassColor,
+    );
+    // Draw border
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()
+        ..color = GameConfig.glassBorderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
+  }
+
   void refreshScore() async {
     final highestScore = await AppDatabase.instance.getHighestScore();
-    final newText = 'High Score: $highestScore';
+    final newText = 'HIGH SCORE: $highestScore';
 
     if (textComponent.text != newText) {
       textComponent.text = newText;

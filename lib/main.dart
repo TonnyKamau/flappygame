@@ -3,6 +3,7 @@ import 'package:flappygame/database/database.dart';
 import 'package:flappygame/game.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flappygame/constants.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -27,8 +28,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flappy Game',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: GameConfig.primaryColor),
         useMaterial3: true,
+        fontFamily: 'Roboto', // Defaulting to a clean sans-serif
       ),
       home: GameWidget(game: FlappyGame()),
     );

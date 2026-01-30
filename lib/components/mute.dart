@@ -8,11 +8,9 @@ import 'components.dart';
 class MuteButton extends PositionComponent with TapCallbacks {
   final FlappyGame game;
   late final TextComponent muteText;
-  final Paint _bgPaint;
   bool isMuted = false;
 
-  MuteButton(this.game)
-      : _bgPaint = Paint()..color = Colors.white.withValues(alpha: 0.7) {
+  MuteButton(this.game) {
     size = Vector2(GameConfig.buttonSize, GameConfig.buttonSize);
     position = Vector2(
       game.size.x - size.x - GameConfig.buttonMargin,
@@ -23,22 +21,23 @@ class MuteButton extends PositionComponent with TapCallbacks {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    priority = 100;
+
+    isMuted = SoundManager.isMuted;
 
     muteText = TextComponent(
-      text: '🔇',
+      text: isMuted ? '🔇' : '🔊',
       textRenderer: TextPaint(
         style: TextStyle(
-          fontSize: GameConfig.buttonFontSize,
-          color: Colors.black,
+          fontSize: GameConfig.buttonFontSize * 0.7,
+          fontWeight: FontWeight.w900,
+          color: Colors.black87,
         ),
       ),
     );
 
-    muteText.position = Vector2(
-      (size.x - muteText.size.x) / 2,
-      (size.y - muteText.size.y) / 2,
-    );
-
+    muteText.anchor = Anchor.center;
+    muteText.position = size / 2;
     add(muteText);
   }
 
@@ -55,18 +54,23 @@ class MuteButton extends PositionComponent with TapCallbacks {
   @override
   void onTapDown(TapDownEvent event) {
     SoundManager.toggleMute();
-    isMuted = !isMuted;
-    muteText.text = isMuted ? '🔊' : '🔇';
+    isMuted = SoundManager.isMuted;
+    muteText.text = isMuted ? '🔇' : '🔊';
   }
 
   @override
   void render(Canvas canvas) {
+    final rect = Rect.fromLTWH(0, 0, size.x, size.y);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.x, size.y),
-        const Radius.circular(8),
-      ),
-      _bgPaint,
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()..color = GameConfig.glassColor,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()
+        ..color = GameConfig.glassBorderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
     );
     super.render(canvas);
   }

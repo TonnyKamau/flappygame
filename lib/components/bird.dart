@@ -37,13 +37,16 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
+    final gameRef = (parent as FlappyGame);
+    if (gameRef.isGameOver) return;
+
     if (other is Ground) {
       SoundManager.playDieSound();
-      (parent as FlappyGame).gameOver();
+      gameRef.gameOver();
     }
     if (other is Pipe) {
       SoundManager.playHitSound();
-      (parent as FlappyGame).gameOver();
+      gameRef.gameOver();
     }
   }
 }

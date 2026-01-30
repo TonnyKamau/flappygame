@@ -4,13 +4,11 @@ import 'package:flappygame/constants.dart';
 import 'package:flutter/material.dart';
 import '../game.dart';
 
-class PauseButton extends PositionComponent with TapCallbacks {
-  final FlappyGame game;
+class PauseButton extends PositionComponent
+    with TapCallbacks, HasGameReference<FlappyGame> {
   late final TextComponent pauseText;
-  final Paint _bgPaint;
 
-  PauseButton(this.game)
-      : _bgPaint = Paint()..color = Colors.white.withValues(alpha: 0.7) {
+  PauseButton(FlappyGame game) : super() {
     size = Vector2(GameConfig.buttonSize, GameConfig.buttonSize);
     position = Vector2(
       game.size.x - size.x - GameConfig.buttonMargin,
@@ -21,22 +19,21 @@ class PauseButton extends PositionComponent with TapCallbacks {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    priority = 100;
 
     pauseText = TextComponent(
-      text: '⏸️',
+      text: 'II',
       textRenderer: TextPaint(
         style: TextStyle(
-          fontSize: GameConfig.buttonFontSize,
-          color: Colors.black,
+          fontSize: GameConfig.buttonFontSize * 0.8,
+          fontWeight: FontWeight.w900,
+          color: Colors.black87,
         ),
       ),
     );
 
-    pauseText.position = Vector2(
-      (size.x - pauseText.size.x) / 2,
-      (size.y - pauseText.size.y) / 2,
-    );
-
+    pauseText.anchor = Anchor.center;
+    pauseText.position = size / 2;
     add(pauseText);
   }
 
@@ -51,20 +48,42 @@ class PauseButton extends PositionComponent with TapCallbacks {
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    // Sync icon with game state (pausing/resuming)
+    final expectedText = game.isPaused ? '▶' : 'II';
+    if (pauseText.text != expectedText) {
+      pauseText.text = expectedText;
+    }
+  }
+
+  @override
   void onTapDown(TapDownEvent event) {
-    if (!game.isGameOver && !game.isReady) {
+    if (game.isGameOver || game.isReady) return;
+
+    if (game.isPaused) {
+      // If we're already paused, resume (this handles if dialog was closed manually)
+      game.isPaused = false;
+      game.resumeEngine();
+      // Close any open dialogs if possible (though resume happens inside dialog usually)
+    } else {
       game.pauseGame();
     }
   }
 
   @override
   void render(Canvas canvas) {
+    final rect = Rect.fromLTWH(0, 0, size.x, size.y);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.x, size.y),
-        const Radius.circular(8),
-      ),
-      _bgPaint,
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()..color = GameConfig.glassColor,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, Radius.circular(GameConfig.buttonRadius)),
+      Paint()
+        ..color = GameConfig.glassBorderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
     );
     super.render(canvas);
   }
