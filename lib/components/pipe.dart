@@ -7,9 +7,9 @@ import 'package:flappygame/game.dart';
 import 'components.dart';
 
 class Pipe extends SpriteComponent
-    with HasGameRef<FlappyGame>, CollisionCallbacks {
-  final bool isTop; // Indicates if the pipe is the top pipe
-  bool scored = false; // Tracks if the pipe has been scored
+    with HasGameReference<FlappyGame>, CollisionCallbacks {
+  final bool isTop;
+  bool scored = false;
 
   Pipe(Vector2 size, Vector2 position, {required this.isTop})
       : super(size: size, position: position);
@@ -23,24 +23,21 @@ class Pipe extends SpriteComponent
 
   @override
   void update(double dt) {
-    position.x -= pipeSpeed * dt;
+    position.x -= GameConfig.pipeSpeed * dt;
 
-    // Check if the pipe has been scored
-    if (!scored && position.x + size.x / 2 <= gameRef.bird.position.x) {
+    if (!scored && position.x + size.x / 2 <= game.bird.position.x) {
       scored = true;
       if (isTop) {
-        _playPointSound(); // Play the point sound
-        gameRef.updateScore(); // Update the score
+        _playPointSound();
+        game.updateScore();
       }
     }
 
-    // Remove the pipe if it moves off-screen
     if (position.x + size.x / 2 <= 0) {
       removeFromParent();
     }
   }
 
-  // Play the point sound
   void _playPointSound() async {
     try {
       SoundManager.playPointSound();

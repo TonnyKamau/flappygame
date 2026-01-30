@@ -10,8 +10,8 @@ import 'components.dart';
 class Bird extends SpriteComponent with CollisionCallbacks {
   Bird()
       : super(
-          position: Vector2(birdStartX, birdStartY),
-          size: Vector2(birdWidth, birdHeight),
+          position: Vector2(GameConfig.birdStartX, GameConfig.birdStartY),
+          size: Vector2(GameConfig.birdWidth, GameConfig.birdHeight),
         );
   double velocity = 0;
 
@@ -23,13 +23,13 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   }
 
   void flap() {
-    velocity = jumpHeight;
+    velocity = GameConfig.jumpHeight;
     SoundManager.playWingSound();
   }
 
   @override
   void update(double dt) {
-    velocity += gravity * dt;
+    velocity += GameConfig.gravity * dt;
     position.y += velocity * dt;
     super.update(dt);
   }

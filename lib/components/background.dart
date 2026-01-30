@@ -10,4 +10,10 @@ class Background extends SpriteComponent {
     sprite = await Sprite.load('background.png');
     return super.onLoad();
   }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    this.size = size;
+  }
 }

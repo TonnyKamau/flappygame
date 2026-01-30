@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flappygame/constants.dart';
 import 'package:flutter/material.dart';
 import '../game.dart';
 
@@ -9,9 +10,12 @@ class PauseButton extends PositionComponent with TapCallbacks {
   final Paint _bgPaint;
 
   PauseButton(this.game)
-      : _bgPaint = Paint()..color = Colors.white.withOpacity(0.7) {
-    size = Vector2(40, 40);
-    position = Vector2(game.size.x - size.x - 40, 40);
+      : _bgPaint = Paint()..color = Colors.white.withValues(alpha: 0.7) {
+    size = Vector2(GameConfig.buttonSize, GameConfig.buttonSize);
+    position = Vector2(
+      game.size.x - size.x - GameConfig.buttonMargin,
+      GameConfig.buttonMargin,
+    );
   }
 
   @override
@@ -21,8 +25,8 @@ class PauseButton extends PositionComponent with TapCallbacks {
     pauseText = TextComponent(
       text: '⏸️',
       textRenderer: TextPaint(
-        style: const TextStyle(
-          fontSize: 30,
+        style: TextStyle(
+          fontSize: GameConfig.buttonFontSize,
           color: Colors.black,
         ),
       ),
@@ -39,9 +43,10 @@ class PauseButton extends PositionComponent with TapCallbacks {
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
+    this.size = Vector2(GameConfig.buttonSize, GameConfig.buttonSize);
     position = Vector2(
-      size.x - this.size.x - 40,
-      40,
+      size.x - this.size.x - GameConfig.buttonMargin,
+      GameConfig.buttonMargin,
     );
   }
 

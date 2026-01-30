@@ -6,54 +6,45 @@ import 'package:flappygame/constants.dart';
 
 import 'package:flappygame/game.dart';
 
-class PipeManager extends Component with HasGameRef<FlappyGame> {
-  // Constructor for PipeManager
+class PipeManager extends Component with HasGameReference<FlappyGame> {
   PipeManager() : super();
 
-  // Timer to track pipe spawning intervals
-  double pipeSpawnTimer = 0; // Corrected typo
+  double pipeSpawnTimer = 0;
 
   @override
   void update(double dt) {
-    // Increment the timer with the delta time
     pipeSpawnTimer += dt;
 
-    // Check if it's time to spawn a new pipe
-    if (pipeSpawnTimer > pipeSpawnInterval) {
-      pipeSpawnTimer = 0; // Reset the timer
-      spawnPipe(); // Call the method to spawn pipes
+    if (pipeSpawnTimer > GameConfig.pipeSpawnInterval) {
+      pipeSpawnTimer = 0;
+      spawnPipe();
     }
-    super.update(dt); // Call the superclass update method
+    super.update(dt);
   }
 
   void spawnPipe() {
-    // Get the height of the game screen
-    final double screenHeight = gameRef.size.y;
+    final double screenHeight = game.size.y;
 
-    // Calculate the maximum height for the bottom pipe
-    final maxPipeHeight = screenHeight - groundHeight - pipeGap - minPipeHeight;
+    final maxPipeHeight =
+        screenHeight - GameConfig.groundHeight - GameConfig.pipeGap - GameConfig.minPipeHeight;
 
-    // Determine the height of the bottom pipe randomly
     final bottomHeight =
-        Random().nextDouble() * (maxPipeHeight - minPipeHeight) + minPipeHeight;
-    // Calculate the height of the top pipe based on the bottom pipe height
-    final topHeight = screenHeight - groundHeight - pipeGap - bottomHeight;
+        Random().nextDouble() * (maxPipeHeight - GameConfig.minPipeHeight) + GameConfig.minPipeHeight;
+    final topHeight =
+        screenHeight - GameConfig.groundHeight - GameConfig.pipeGap - bottomHeight;
 
-    // Create the bottom pipe
     final bottomPipe = Pipe(
-      Vector2(pipeWidth, bottomHeight),
-      Vector2(gameRef.size.x, screenHeight - groundHeight - bottomHeight),
+      Vector2(GameConfig.pipeWidth, bottomHeight),
+      Vector2(game.size.x, screenHeight - GameConfig.groundHeight - bottomHeight),
       isTop: false,
     );
-    // Create the top pipe
     final topPipe = Pipe(
-      Vector2(pipeWidth, topHeight),
-      Vector2(gameRef.size.x, 0),
+      Vector2(GameConfig.pipeWidth, topHeight),
+      Vector2(game.size.x, 0),
       isTop: true,
     );
 
-    // Add both pipes to the game
-    gameRef.add(bottomPipe);
-    gameRef.add(topPipe);
+    game.add(bottomPipe);
+    game.add(topPipe);
   }
 }
