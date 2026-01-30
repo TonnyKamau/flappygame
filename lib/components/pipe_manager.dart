@@ -13,6 +13,8 @@ class PipeManager extends Component with HasGameReference<FlappyGame> {
 
   @override
   void update(double dt) {
+    if (game.isPaused || game.isGameOver) return;
+
     pipeSpawnTimer += dt;
 
     if (pipeSpawnTimer > GameConfig.pipeSpawnInterval) {
@@ -25,17 +27,23 @@ class PipeManager extends Component with HasGameReference<FlappyGame> {
   void spawnPipe() {
     final double screenHeight = game.size.y;
 
-    final maxPipeHeight =
-        screenHeight - GameConfig.groundHeight - GameConfig.pipeGap - GameConfig.minPipeHeight;
+    final maxPipeHeight = screenHeight -
+        GameConfig.groundHeight -
+        GameConfig.pipeGap -
+        GameConfig.minPipeHeight;
 
     final bottomHeight =
-        Random().nextDouble() * (maxPipeHeight - GameConfig.minPipeHeight) + GameConfig.minPipeHeight;
-    final topHeight =
-        screenHeight - GameConfig.groundHeight - GameConfig.pipeGap - bottomHeight;
+        Random().nextDouble() * (maxPipeHeight - GameConfig.minPipeHeight) +
+            GameConfig.minPipeHeight;
+    final topHeight = screenHeight -
+        GameConfig.groundHeight -
+        GameConfig.pipeGap -
+        bottomHeight;
 
     final bottomPipe = Pipe(
       Vector2(GameConfig.pipeWidth, bottomHeight),
-      Vector2(game.size.x, screenHeight - GameConfig.groundHeight - bottomHeight),
+      Vector2(
+          game.size.x, screenHeight - GameConfig.groundHeight - bottomHeight),
       isTop: false,
     );
     final topPipe = Pipe(

@@ -35,6 +35,9 @@ class SoundManager {
 
   static void toggleMute() {
     isMuted = !isMuted;
+    if (isMuted) {
+      stopAllSounds();
+    }
   }
 
   static void stopAllSounds() {

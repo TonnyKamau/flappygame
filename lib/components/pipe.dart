@@ -23,6 +23,8 @@ class Pipe extends SpriteComponent
 
   @override
   void update(double dt) {
+    if (game.isPaused || game.isGameOver) return;
+
     position.x -= GameConfig.pipeSpeed * dt;
 
     if (!scored && position.x + size.x / 2 <= game.bird.position.x) {

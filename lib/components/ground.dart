@@ -26,6 +26,8 @@ class Ground extends SpriteComponent
 
   @override
   void update(double dt) {
+    if (game.isPaused || game.isGameOver) return;
+
     position.x -= GameConfig.groundSpeed * dt;
     if (position.x + size.x / 2 <= 0) {
       position.x = 0;

@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:flappygame/widgets/game_overlay.dart';
 import 'package:flappygame/database/database.dart';
 import 'package:flappygame/game.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto', // Defaulting to a clean sans-serif
       ),
-      home: GameWidget(game: FlappyGame()),
+      home: GameWidget(
+        game: FlappyGame(),
+        overlayBuilderMap: {
+          'Controls': (context, game) => GameOverlay(game: game as FlappyGame),
+        },
+        initialActiveOverlays: const ['Controls'],
+      ),
     );
   }
 }

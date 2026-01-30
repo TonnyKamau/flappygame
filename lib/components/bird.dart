@@ -29,6 +29,9 @@ class Bird extends SpriteComponent with CollisionCallbacks {
 
   @override
   void update(double dt) {
+    final gameRef = (parent as FlappyGame);
+    if (gameRef.isPaused || gameRef.isGameOver) return;
+
     velocity += GameConfig.gravity * dt;
     position.y += velocity * dt;
     super.update(dt);

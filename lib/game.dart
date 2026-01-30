@@ -14,8 +14,6 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   late Ground ground;
   late PipeManager pipeManager;
   late ScoreText scoreText;
-  late PauseButton pauseButton;
-  late MuteButton muteButton;
   late HighestScore highestScore;
   bool isPaused = false;
   bool isGameOver = false;
@@ -51,17 +49,13 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     ground = Ground();
     pipeManager = PipeManager();
     scoreText = ScoreText();
-    pauseButton = PauseButton(this);
     highestScore = HighestScore();
-    muteButton = MuteButton(this);
 
     add(background);
     add(bird);
     add(ground);
     add(pipeManager);
     add(scoreText);
-    add(pauseButton);
-    add(muteButton);
     add(highestScore);
   }
 
@@ -97,6 +91,9 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
 
   @override
   void onTapDown(TapDownEvent event) {
+    super
+        .onTapDown(event); // Crucial: Allow components to handle their own taps
+
     if (isReady) {
       isReady = false;
       return;
@@ -143,7 +140,7 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
       return;
     }
     isPaused = true;
-    pauseEngine();
+    // Removed pauseEngine() to keep UI buttons interactive
 
     showDialog(
       context: buildContext!,
@@ -199,7 +196,7 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
                 onPressed: () {
                   Navigator.pop(context);
                   isPaused = false;
-                  resumeEngine();
+                  // Removed resumeEngine()
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
@@ -230,7 +227,7 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     }
     _isGameOverProcessing = true;
     isGameOver = true;
-    pauseEngine();
+    // Removed pauseEngine()
 
     final currentHighest = await AppDatabase.instance.getHighestScore();
     if (score > currentHighest) {
@@ -340,11 +337,11 @@ class FlappyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     isGameOver = false;
     _isGameOverProcessing = false;
     isReady = true;
+    isPaused = false;
     score = 0;
     bird.position = Vector2(GameConfig.birdStartX, GameConfig.birdStartY);
     bird.velocity = 0;
     ground.position.x = 0;
     children.whereType<Pipe>().forEach((pipe) => pipe.removeFromParent());
-    resumeEngine();
   }
 }
